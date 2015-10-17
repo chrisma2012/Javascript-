@@ -1,0 +1,38 @@
+
+一、javascript的原型
+     在Javascript高级程序设计里，这样解析的原型：我们创建的每一个函数都有一个prototype属性，这个属性是一个指针，指向一
+ 个对象（注意是对象而不是java中的类）。按照字面意思，prototype就是通过调用构造函数而创建的那个对象实例的原型对象。
+     无论在什么时候，只要创建了一个新函数，就会根据一组特定的规则为该函数创建一个prototype属性，这个属性指向函数的原型对象。
+在默认情况下，所有原型对象都会自动获得一个constructor（构造函数）属性，这个属性包含一个指向prototype属性所在函数的指针。
+     创建了自定义的构造函数之后，其原型对象默认只会取得constructor属性，至于其他方法，则都是从Object继承而来。当调用构造函
+数创建一个新实例之后，该实例的内部将包含一个指针（内部属性），指向构造函数的原型对象。ECMA-262第5版中将这个指针
+叫[[Prototype]]。虽然在脚本中没有标准的方式访问[[Prototype]],但Firefox、Safari和Chrome在每个对象上都支持一个属性__proto__;
+而在其他实现中，这个属性对脚本则是完全不可见的。指的注意的是：这个连接存在于实例与构造函数的原型对象之间，而不是存在于实例
+与构造函数之间。
+
+  例一：
+        function f1(){
+      	};
+      	f1.prototype.name="ceshi";
+      
+      	 console.log(f1.prototype)                        //f1
+      	 console.log(typeof f1.prototype)                 //object
+      
+      	 console.log(typeof Function.prototype)           // function 
+      	 console.log(typeof Object.prototype)             // Object
+      	 console.log(typeof Function.prototype.prototype) //undefined
+  例二、
+          function Person(myName,age){
+           	this.myName=myName;
+           	this.age=age;
+           };
+          var per=new Person("庄三",20);
+          function Child(){};
+          Child.prototype=per;                 //设置Child继承Person类（另一种说法：将Child的原型对象设置为per)
+          Child.prototype.sex="男";
+          Child.prototype.address="广州";
+          console.log(per.sex);               //男
+          console.log(per["address"]);        //广州
+           
+           注：尽管属性sex和address是在per创建之后再以prototype的形式动态添加的，但仍然能通过per.sex和per.address的方
+               式访问其值。
