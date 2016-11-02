@@ -1,0 +1,79 @@
+
+   
+ * 用例：将for循环的比较参数 i 依次赋值给数组result
+  
+    一、方法1：
+            function createFunction(){
+                var result=new Array();
+                for( var i=0;i<10;i++ ）{
+                      result[i]= function(){
+                      return i;
+                       };
+                 }
+                 return result;
+          }
+
+    注：
+        该函数返回一个函数数组result，数组的每一项都是对同一个函数的引用，即function(){return i}，
+        并且对数组每一项的调用（ result[i]() ）的返回值都是 10。原因在于， result[i]=function(){return i;} 只是
+        一个单纯的赋值表达式，将function(){return i;} 匿名函数的地址赋值给 result[i],并没有被调用该匿名函数。
+        而当result数组的任意一项被调用时，for循环早已经结束，此时i已经变为了10。故调用result[i]()时，获得的值均为10。
+        总结：1、for循环在此处的作用只是将匿名函数地址赋值给数组result;
+              2、解决此问题的关键点在于：赋值时，=右边的表达式有无立即执行或者被用于赋值的函数能否访问到原来定义
+                 该函数的作用域(即该函数是否为闭包);
+                 故解决方法有(插入到for循环内)：
+                                            1、result[i]=i;
+                                            2、result[i]=function(num){
+                                                return function(){
+                                                return num;
+                                                };
+                                               }(i);
+                                            3、result[i]=(function(num){return num;})(i);
+
+    二、块级作用域的模仿
+          javascript没有块级作用域的概念，故要构建一个变量属性只能在内部访问的类似块级作用域，需要用到圆括号().
+          例：(function(){
+              //此处为块级作用域
+          }) ()
+          
+          注：上面的示例将匿名函数用（）包含起来，表示它实际上是一个函数表达式。而紧随其后的另一个()会立即调用这个函数，
+              故该函数亦称为 匿名自执行函数。
+              除此之外，表示立即执行的表示方式还有：
+                                                var result=function(){ var str="这是测试用例"; return str;}();
+                                                alert(result);  //这是测试用例
+
+         在这里alert(result)并不会将匿名函数的代码打印出来，而是输出“这是测试用例”。因为第一行赋值表达式的右边加上了括号()后，
+         已经不再是将匿名函数引用给result了。而是匿名函数立即执行后，将其执行后的结构赋值给result但值得注意的是，
+         虽然  var result=function(){ var str="这是测试用例"; return str;}(); 这样的定义是正确的，但下面的写法却是不正确的：
+                       function(){
+                       }()
+         因为javascript将function关键字当作一个函数声明的开始，而函数声明的后面不能跟括号。但函数表达式的后面则可以跟括号
+
+    三、javascript的执行顺序
+        例一、
+            console.log(test); //undefined
+            var test = "你好";
+            console.log(test); //"你好"
+            console.log(test2); //Uncaught ReferenceError: test2 is not defined
+
+            javascript执行时，在同一个作用域内是先编译再执行。。js解析的时候会优先解析function，然后才是var，
+            完成后从上往下执行并向变量赋值。所以test执行之前, var test 已经执行过了，所以test不会报错，而test2就会报错。
+        例二、
+              函数声明的等价方法：
+                 function a() {}  等价于 var a =function (){}
+              上面的例子中左右两种写法等价，故在非匿名函数function a(){}定义的同时，实质上是先定义了一个变量a,
+              然后再将匿名函数的地址赋值给a，所以下面的例子中输出的结果为：1
+              
+                var a = 1;
+                function test() {
+                    a = 2;
+                    return;
+                    function a() {}  //等价于var a=function(){},相当于定义了一个局部变量a,然后将2赋值给a，
+                                       覆盖掉了test()函数外面全局变量a
+                }
+
+                test();
+                console.log(a); //结果为1,此处的a为全局变量
+                
+                
+

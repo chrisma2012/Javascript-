@@ -1,0 +1,28 @@
+ 
+
+     【 所谓词法作用域是说，其作用域是在定义时（词法分析时）就确定下来的，而并非在执行时确定】
+
+     例一：
+          var str="global";    //全局变量
+          function scopeTest(){
+            console.log(str);       //undefined
+            var str ="local";
+            console.log(str);       //local
+          }
+          scopeTest();
+
+
+     例二：
+          var str="global";
+          function scopeTest(){
+            console.log(str);       //global
+         //   var str ="local";
+            console.log(str);       //global
+          }
+          scopeTest();
+
+    总结：由例一和例二可知，js在函数内同样没有块作用域，在函数内定义的变量其作用范围是整个函数块，与其在函数内定义的位置无关。
+          因此，js在解析函数时，会预先解析var声明，然后才是按从上至下的顺序执行代码。故而在上例一中，函数内新定义的var str覆
+          盖了全局变量str，并且在执行到第一个代码段“console.log(str)”时，函数内的str还没被赋值初始化，所以结果为undefined。
+          到了第二个代码段时，局部变量str已经被赋值，故结果为local。例二中，将局部变量str注释掉后，函数内访问到的str均是外部
+          定义的全局变量，故结果均是global。

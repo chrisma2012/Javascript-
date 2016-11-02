@@ -1,0 +1,39 @@
+ 
+ 一、javascript的类定义
+
+        首先从JS的类定义说起，javascript使用类来完成面向对象编程，类是使用 构造函数 来定义的，而构造函数通过javascript函数来
+    实现。所以，比较于java的class类定义，javascript的类定义只是function关键字来定义。java的类定义是将属性和函数封装在class里，
+    而javascript则是将类定义封装在构造函数当中(也就是function函数)
+
+ 二、包含return语句的构造函数，在使用和不使用new关键字情况下的 区别
+           例一：
+        			    function test() { 
+        				　　this.name = 'test'; 
+        				　　return 'test'; 
+        				} 
+        				var E1 = test(); 
+        				var E2 = new test(); 
+        				console.log(typeof E1);  // string
+        				console.log(typeof E2);  // object
+ 
+           例二：
+          				function test2() { 
+          				　　this.name = 'test'; 
+          				　　return function() { return true; } 
+          				} 
+          				var tt= new test2();
+          				var aa=test2();
+          				console.log(typeof tt);  // function
+          				console.log(typeof aa);  // function
+
+    1、直接调用 构造函数 为其他变量赋值（例如var E1 = test();），构造函数返回的结果当然和调用普通函数的一样
+      （因为构造函数也是函数）
+      
+    2、使用new 关键字时，构造函数的返回值类型需要根据return返回的相关。如果函数返回值为常规意义上的数据类型
+      （Number、String、Boolean、）时，new函数将会返回一个该函数的实例对象，而如果函数返回一个引用类型
+      （Object、Array、Function），则 new 函数与直接调用函数产生的结果等同（即返回的都是对应的引用类型而不是实例对象）。
+      
+    3、对于函数名称的规范：普通函数建议使用驼峰式命名(例如：firstTest() );
+                           构造函数命名则推荐首字母大写，以区别普通函数（例如：FirstTest() ），
+                            事实上，首字母是否大写不影响构造函数的实质功能，首字母小写亦能用new关键字创建出对象。
+    4、用构造函数new 一个对象 是唯一的一个不用return语句就能返回值的方法。

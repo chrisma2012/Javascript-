@@ -1,0 +1,16 @@
+     /* if(undef)    not defined解析出错，程序会停止执行，与定义了但还未被赋值的变量相比，区别在于，后者是undefined类型，
+	             程序会继续执行。*/
+
+      var str1;                   //if(str1) 为false
+
+      var str="";                 //if(str) 为false
+      var str2="这是测试字符串";  //if(str2) 为true
+      var str3=new String();      //if(str3)为true
+
+      var num="20";               //if(num) 为true
+
+      var obj={};                 //if(obj) 为true
+      var obj1={zhangsan:"男"};   //if(obj1) 为true
+      var obj2=new Object();      //if(obj2) 为true
+
+      var func=new Function();    //if(func) 为true
